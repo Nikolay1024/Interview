@@ -1,0 +1,117 @@
+﻿@using PriceListEditor2.Domain.Core.Enums
+@using PriceListEditor2.Models
+
+@model CreatePriceListViewModel
+
+@{
+    ViewBag.Title = "Добавление прайс-листа";
+}
+
+<main>
+    <h1>@ViewBag.Title</h1>
+
+    @using (Html.BeginForm("CreatePriceList", "PriceLists", FormMethod.Post))
+    {
+        <div class="py-1">
+            <a class="btn btn-outline-danger" href="@Url.Action("PriceLists", "PriceLists")">Отмена</a>
+        </div>
+
+        <div class="form-floating py-1">
+            @Html.TextBoxFor(m => m.Name, new { autocomplete = "off", @class = "form-control", maxlength = 100, required = "required", placeholder = "" })
+            @Html.LabelFor(m => m.Name)
+        </div>
+
+        <div class="py-1" id="columns-container">
+            <div class="row">
+                <div class="col-sm-2">Колонка 1</div>
+                <div class="column-name col-sm-5">
+                    @Html.TextBox("Columns[0].Name", "Колонка (числовая)",
+                   new { autocomplete = "off", @class = "form-control", maxlength = 100, required = "required" })
+                </div>
+                <div class="column-type col-sm-4">
+                    @Html.DropDownList("Columns[0].Type", EnumHelper.GetSelectList(typeof(PriceListColumnType), PriceListColumnType.Number),
+                   new { @class = "form-select" })
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-outline-danger" onclick="deleteColumn(${index})" disabled>Удалить</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-1">
+            <a id="btn-add-column" class="btn btn-outline-success">+ Добавить колонку</a>
+            <button type="submit" class="btn btn-outline-success">+ Добавить прайс-лист</button>
+        </div>
+    }
+</main>
+
+@section scripts{
+    <script>
+        $("#btn-add-column").on("click", function () {
+            const columnsContent = $("#columns-container .row");
+            let columns = [];
+
+            $.each(columnsContent, (index, value) => {
+                columns.push({
+                    name: $(value).find(".column-name > input").val() ?? "",
+                    type: $(value).find(".column-type > select > option:selected").val() ?? "0",
+                })
+            });
+
+            columns.push({
+                name: "",
+                type: "0",
+            });
+
+            const container = $("#columns-container");
+            container.empty();
+            $.each(columns, (index, value) => {
+                container.append(getItem(index, value.name));
+                $(`.column-type:eq(${index}) option[value=${value.type}]`).attr('selected', 'selected');
+            });
+        });
+
+        function deleteColumn(index) {
+            const columnsContent = $("#columns-container .row");
+            let columns = [];
+            $.each(columnsContent, (index, value) => {
+                columns.push({
+                    type: $(value).find(".column-type > select > option:selected").val(),
+                    name: $(value).find(".column-name > input").val(),
+                })
+            });
+
+            columns.splice(index, 1);
+
+            const container = $("#columns-container");
+            container.empty();
+            $.each(columns, (index, value) => {
+                container.append(getItem(index, value.name));
+                $(`.column-type:eq(${index}) option[value=${value.type}]`).attr('selected', 'selected');
+            });
+        };
+
+        function getItem(index, name) {
+            let element = `
+                    <div class="row">
+                        <div class="col-sm-2">Колонка ${index + 1}</div>
+                        <div class="column-name col-sm-5">
+                            <input value="${name}" name="Columns[${index}].Name" autocomplete="off" class="form-control" maxlength="100" required="required"/>
+                        </div>
+                        <div class="column-type col-sm-4">
+                            <select name="Columns[${index}].Type" class="form-select">
+                                <option value="0">Число</option>
+                                <option value="1">Однострочный текст</option>
+                                <option value="2">Многострочный текст</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-outline-danger" onclick="deleteColumn(${index})">Удалить</button>
+                        </div>
+                    </div>
+                `;
+
+            return element;
+        }
+    </script>
+}

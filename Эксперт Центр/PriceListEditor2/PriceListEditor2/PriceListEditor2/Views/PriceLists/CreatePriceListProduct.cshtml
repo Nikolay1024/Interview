@@ -1,0 +1,59 @@
+﻿@using PriceListEditor2.Domain.Core.Enums
+@using PriceListEditor2.Models
+
+@model CreatePriceListProductViewModel
+
+@{
+    ViewBag.Title = "Добавление товара";
+}
+
+<main>
+    <h1>@ViewBag.Title</h1>
+
+    @using (Html.BeginForm("CreatePriceListProduct", "PriceLists", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.PriceListId)
+        
+        <div class="row">
+            @Html.LabelFor(m => m.Name)
+            @Html.EditorFor(m => m.Name, "", new { autocomplete = "off", maxlength = 100, required = "required", style = "width:100%",
+           @class = "form-control"})
+        </div>
+        
+        <div class="row">
+            @Html.LabelFor(m => m.Code)
+            @Html.EditorFor(m => m.Code, "", new { autocomplete = "off", maxlength = 100, required = "required", style = "width:100%" })
+        </div>
+        
+
+        <div id="cells-container">
+            @for (int i = 0; i < Model.Columns.Count; i++)
+            {
+                <div class="row">
+                    <div class="col-sm-6">
+                        @Html.Label("", Model.Columns[i].Name)
+                    </div>
+                    <div class="col-sm-6">
+                        @if (Model.Columns[i].Type == PriceListColumnType.Number)
+                        {
+                            @Html.TextBox($"Cells[{i}]", "", new { id = "", type = "number", @class = "form-control" })
+                        }
+                        else if (Model.Columns[i].Type == PriceListColumnType.String)
+                        {
+                            @Html.TextBox($"Cells[{i}]", "", new { id = "" })
+                        }
+                        else if (Model.Columns[i].Type == PriceListColumnType.Text)
+                        {
+                            @Html.TextArea($"Cells[{i}]", "", new { id = "", @class = "form-control" })
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div>
+            <a class="btn btn-outline-primary" href="@Url.Action("DetailsPriceList", "PriceLists", new { Model.PriceListId })">Отмена</a>
+            <button type="submit" class="btn btn-outline-success">Сохранить</button>
+        </div>
+    }
+</main>

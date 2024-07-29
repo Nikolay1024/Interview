@@ -1,0 +1,39 @@
+﻿@using PriceListEditor2.Models
+
+@model FilteredPriceListsViewModel
+
+@{
+    ViewBag.Title = "Прайс-листы";
+}
+
+<main>
+    <h1>@ViewBag.Title</h1>
+
+    <a class="btn btn-outline-success" href="@Url.Action("CreatePriceList", "PriceLists")">+ Добавить прайс-лист</a>
+
+    <table id="table-price-lists">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Название</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var priceList in Model.Items)
+            {
+                <tr>
+                    <td>@priceList.Id</td>
+                    <td><a href="@Url.Action("DetailsPriceList", "PriceLists", new { id = priceList.Id })">@priceList.Title</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</main>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#table-price-lists').DataTable({ language: dtLanguage });
+        });
+    </script>
+}

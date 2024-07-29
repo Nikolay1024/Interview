@@ -1,0 +1,73 @@
+﻿@using DataAccessLayer.EntityFramework;
+
+@model PriceList
+
+@{
+    ViewBag.Title = "Добавление прайс-листа";
+
+    var selectList = new SelectList(
+        new Dictionary<string, string>()
+        {
+            { "int", "Число" },
+            { "string", "Однострочный текст" },
+            { "text", "Многострочный текст" }
+                        },
+        "Key", "Value");
+}
+
+<main>
+    <h1>@ViewBag.Title</h1>
+
+    <button type="submit" class="btn btn-outline-success">Продолжить</button>
+    <a class="btn btn-outline-primary" href="@Url.Action("GetPriceLists", "PriceList")">Отмена</a>
+
+    @using (Html.BeginForm("AddPriceList", "PriceList", FormMethod.Post, new { id = "abonent-form" }))
+    {
+        @Html.Label("Name", "Название прайс-листа *")
+        @Html.TextBox("Name", "", new { autocomplete = "off", maxlength = 100, required = "required", style = "width:100%" })
+        <br /><br />
+        <div class="row">
+            <div class="col-sm-1">Колонка 1</div>
+            <div class="col-sm-5">
+                @Html.TextBox("ColumnName", "Моя колонка (числовая)", new { autocomplete = "off", maxlength = 100, required = "required", style = "width:100%" })
+            </div>
+            <div class="col-sm-5">
+                @Html.DropDownList("column1", selectList, "Число", new { disabled = "disabled", @class = "form-select form-select-sm" })
+            </div>
+            <div class="col-sm-1"><a class="btn btn-outline-danger disabled">Удалить</a></div>
+        </div>
+        <div id="columns-conteiner">
+
+        </div>
+    }
+
+    <a id="btn-add-column" class="btn btn-outline-primary">Добавить колонку</a>
+</main>
+
+<script>
+    $(document).ready(function () {
+        let index = 1;
+        $("#btn-add-column").click(function () {
+            $("#columns-conteiner").append($("<div></div>").addClass("row").attr({ data: index }));
+            $("#columns-conteiner div.row:last").append($("<div></div>").addClass("col-sm-1").text("Колонка 1"));
+            $("#columns-conteiner div.row:last").append($("<div></div>").addClass("col-sm-5"));
+            $("#columns-conteiner div.row:last div:last").append($("<input/>").val("Моя колонка (числовая)").css("width", "100%")
+                .attr({ autocomplete: "off", maxlength: 100, required: "required" }));
+            $("#columns-conteiner div.row:last").append($("<div></div>").addClass("col-sm-5"));
+            $("#columns-conteiner div.row:last div:last").append($("<select></select>").addClass("form-select form-select-sm")
+                .attr({ id: "Type", name: "Type" }));
+            $("#columns-conteiner select:last").append($("<option></option>").attr("value", "int").text("Число"));
+            $("#columns-conteiner select:last").append($("<option></option>").attr("value", "string").text("Однострочный текст"));
+            $("#columns-conteiner select:last").append($("<option></option>").attr("value", "text").text("Многострочный текст"));
+            $("#columns-conteiner div.row:last").append($("<div></div>").addClass("col-sm-1"));
+            $("#columns-conteiner div.row:last div:last").append($("<a></a>").addClass("btn btn-outline-danger btn-remove-column").text("Удалить")
+                .attr({ data: index++ }));
+        });
+
+        $(".btn-remove-column").click(function () {
+            //`text ${var}`
+            console.log(this.data);
+            $(`#columns-conteiner div.row:[data:"${this.data}"]`).remove();
+        });
+    });
+</script>

@@ -1,0 +1,95 @@
+﻿@using PriceListEditor2.Models
+
+@model DetailsPriceListViewModel
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<main>
+    <h1>@ViewBag.Title</h1>
+
+    <a class="btn btn-outline-success" href="@Url.Action("CreatePriceListProduct", "PriceLists", new { Model.Id })">+ Добавить позицию</a>
+    <a class="btn btn-outline-primary" href="@Url.Action("PriceLists", "PriceLists")">Назад к списку</a>
+
+    <table id="table-price-list">
+        <thead>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</main>
+
+@section scripts{
+    <script>
+        $(function () {
+            getDT();
+        });
+
+        function getDT() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("PriceListProductsDataHandler", "PriceLists", new { priceListId = Model.Id })',
+                success: function (data) {
+                    let columns = [];
+                    columnsTemps = data.data[0].Columns;
+                    columns.push({ data: "Name", title: "Имя товара" });
+                    columns.push({ data: "Code", title: "Код товара" });
+                    let j = 3;
+                    for (let value of Object.values(columnsTemps)) {
+                        columns.push({ data: value.Id, title: value.Name });
+                        j++;
+                    }
+                    columns.push({
+                        data: null,
+                        render: function (row) {
+                            return `
+                            <button class="btn btn-outline-danger" onclick="deleteProduct(${row.Id})">
+                                Удалить
+                            </button>
+                            `;
+                        }
+                    });
+
+                    $('#table-price-list').DataTable({
+                        language: dtLanguage,
+                        columns: columns,
+                        ajax: {
+                            type: "POST",
+                            url: '@Url.Action("PriceListProductsDataHandler", "PriceLists", new { priceListId = Model.Id })',
+                            contentType: 'application/json; charset=utf-8',
+                            dataSrc: function (data) {
+                                arrayObjects = [];
+                                for (let i = 0; i < data.data.length; i++) {
+                                    object = {
+                                        Name: data.data[i].Name,
+                                        Code: data.data[i].Code.toString(),
+                                    };
+
+                                    cells = Object.values(data.data[i].Cells);
+                                    for (sell of cells) {
+                                        object[sell.ColumnId] = sell.Value;
+                                    }
+                                    object.Id = data.data[i].Id,
+                                    arrayObjects.push(object);
+                                }
+                                return arrayObjects;
+                            },
+                        },
+                    });
+                }
+            });
+        }
+
+        function deleteProduct(priceListProductId) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Delete", "PriceLists")',
+                data: { priceListProductId },
+                success: function () {
+                    $('#table-price-list').DataTable().ajax.reload();
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,43 @@
+﻿@using DataAccessLayer.EntityFramework;
+@using PriceListEditor.Models;
+
+@model PriceListModel
+
+@{
+    ViewBag.Title = Model.PriceList.Name;
+}
+
+<main>
+    <h1>@ViewBag.Title</h1>
+
+    <a class="btn btn-outline-success" href="@Url.Action("AddRow", "PriceList")">+ Добавить позицию</a>
+    <a class="btn btn-outline-primary" href="@Url.Action("GetPriceLists", "PriceList")">Назад к списку</a>
+
+    <table id="my-table">
+        <thead>
+            <tr>
+                @foreach (Column column in Model.Columns)
+                {
+                    <th>@column.Name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (int i in Model.Cells.Select(cel => cel.RowId).Distinct())
+            {
+                <tr>
+                    @foreach (int j in Model.Cells.Where(cel => cel.RowId == i).Select(cel => cel.ColumnId))
+                    {
+                        <td>@Model.Cells.FirstOrDefault(cel => cel.RowId == i && cel.ColumnId == j).Value</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</main>
+
+<script>
+    $(document).ready(function () {
+        $('#my-table').dataTable();
+    });
+</script>

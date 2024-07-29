@@ -1,0 +1,19 @@
+﻿@{
+    var selectList = new SelectList(
+        new Dictionary<string, string>()
+        {
+            { "int", "Число" },
+            { "string", "Однострочный текст" },
+            { "text", "Многострочный текст" }
+                        },
+        "Key", "Value");
+}
+
+<div class="row">
+    <div class="col-sm-1">Колонка 1</div>
+    <div class="col-sm-5">Моя колонка (числовая)</div>
+    <div class="col-sm-5">
+        @Html.DropDownList("column1", selectList, "Число", new { disabled = "disabled", @class = "form-select form-select-sm" })
+    </div>
+    <div class="col-sm-1"><a class="btn btn-outline-danger">Удалить</a></div>
+</div>
