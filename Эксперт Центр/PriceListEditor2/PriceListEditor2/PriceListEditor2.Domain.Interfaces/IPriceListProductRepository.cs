@@ -7,13 +7,18 @@ namespace PriceListEditor2.Domain.Interfaces
     public interface IPriceListProductRepository
     {
         /// <summary>
-        /// Добавление товара в прайс-лист
+        /// Добавление товара в прайс-лист.
         /// </summary>
-        /// <param name="product">Товар</param>
         /// <param name="cancellationToken">Токен отмены операции</param>
-        /// <returns></returns>
-        Task<int> CreatePriceListProductAsync(PriceListProduct product, CancellationToken cancellationToken);
-        
-        void Delete(int priceListProductId);
+        /// <param name="priceListProduct">Товар</param>
+        /// <returns>Идентификатор товара, добавленного в прайс-лист.</returns>
+        Task<int> CreatePriceListProductAsync(CancellationToken cancellationToken, PriceListProduct priceListProduct);
+
+        /// <summary>
+        /// Удаляет товар из прайс-листа по идентификатору товара.
+        /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <param name="priceListProductId">Идентификатор товара прайс-листа</param>
+        Task DeletePriceListProductByIdAsync(CancellationToken cancellationToken, int priceListProductId);
     }
 }

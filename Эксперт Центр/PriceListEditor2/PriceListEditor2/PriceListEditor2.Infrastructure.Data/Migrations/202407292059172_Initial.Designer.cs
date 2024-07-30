@@ -7,13 +7,13 @@ namespace PriceListEditor2.Infrastructure.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class DeleteBook : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DeleteBook));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "202407211307565_DeleteBook"; }
+            get { return "202407292059172_Initial"; }
         }
         
         string IMigrationMetadata.Source

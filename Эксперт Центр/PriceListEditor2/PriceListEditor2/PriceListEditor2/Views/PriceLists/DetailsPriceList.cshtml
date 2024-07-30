@@ -84,7 +84,7 @@
         function deleteProduct(priceListProductId) {
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("Delete", "PriceLists")',
+                url: '@Url.Action("DeletePriceListProduct", "PriceLists")',
                 data: { priceListProductId },
                 success: function () {
                     $('#table-price-list').DataTable().ajax.reload();

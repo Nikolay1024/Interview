@@ -145,12 +145,10 @@
     </Compile>
     <Compile Include="Models\DataTable.cs" />
     <Compile Include="Models\GetPriceListCellViewModel.cs" />
-    <Compile Include="Models\PriceListCellViewModel.cs" />
     <Compile Include="Models\GetPriceListColumnViewModel.cs" />
     <Compile Include="Models\PriceListColumnViewModel.cs" />
     <Compile Include="Models\CreatePriceListViewModel.cs" />
-    <Compile Include="Models\FilteredPriceListParameters.cs" />
-    <Compile Include="Models\FilteredPriceListsViewModel.cs" />
+    <Compile Include="Models\PriceListsViewModel.cs" />
     <Compile Include="Models\CreatePriceListProductViewModel.cs" />
     <Compile Include="Models\PriceListViewModal.cs" />
     <Compile Include="Models\DetailsPriceListViewModel.cs" />

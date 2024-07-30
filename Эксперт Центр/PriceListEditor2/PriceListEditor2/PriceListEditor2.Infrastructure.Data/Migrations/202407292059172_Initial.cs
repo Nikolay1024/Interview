@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class CreateTables : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -36,12 +36,22 @@
                 .Index(t => t.PriceListId);
             
             CreateTable(
+                "dbo.PriceLists",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.PriceListProducts",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Name = c.String(),
-                        Code = c.String(),
+                        Code = c.Int(nullable: false),
                         PriceListId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
@@ -61,6 +71,7 @@
             DropIndex("dbo.PriceListCells", new[] { "PriceListColumnId" });
             DropIndex("dbo.PriceListCells", new[] { "PriceListProductId" });
             DropTable("dbo.PriceListProducts");
+            DropTable("dbo.PriceLists");
             DropTable("dbo.PriceListColumns");
             DropTable("dbo.PriceListCells");
         }

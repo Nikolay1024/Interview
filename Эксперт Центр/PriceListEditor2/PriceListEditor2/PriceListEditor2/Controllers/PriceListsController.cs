@@ -10,6 +10,11 @@ using System.Web.Mvc;
 
 namespace PriceListEditor2.Controllers
 {
+    // async/await
+    // комментарии в методах контроллера, вьюмоделях, репозиториях, сущностях
+    /// <summary>
+    /// Контроллер прайс-листа
+    /// </summary>
     [RoutePrefix("PriceLists")]
     public class PriceListsController : Controller
     {
@@ -27,34 +32,40 @@ namespace PriceListEditor2.Controllers
             _priceListCellRepository = priceListCellRepository;
         }
 
+        // GET: /PriceLists/PriceLists
         /// <summary>
-        /// 
+        /// Возвращает лист прайс-листов.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <returns>Лист прайс-листов.</returns>
         [HttpGet]
-        public async Task<ActionResult> PriceLists(FilteredPriceListParameters parameters, CancellationToken cancellationToken)
+        public async Task<ActionResult> PriceLists(CancellationToken cancellationToken)
         {
-            IEnumerable<PriceList> priceLists = await _priceListRepository
-                .GetFilteredListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
+            List<PriceList> priceLists = await _priceListRepository.GetPriceListsAsync(cancellationToken);
 
-            var filteredPriceListsViewModel = new FilteredPriceListsViewModel
+            var priceListsViewModel = new PriceListsViewModel()
             {
-                Items = priceLists.Select(p => new PriceListViewModal()
+                PriceLists = priceLists.Select(p => new PriceListViewModal()
                 {
                     Id = p.Id,
-                    Title = p.Name,
+                    Name = p.Name,
                 }).ToList()
             };
 
-            return View(filteredPriceListsViewModel);
+            return View(priceListsViewModel);
         }
 
         // GET: /PriceLists/{id}
+        /// <summary>
+        /// Возвращает подробности прайс-листа.
+        /// </summary>
+        /// <param name="id">Идентификатор прайс листа</param>
+        /// <returns>Прайс-лист.</returns>
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult DetailsPriceList(int id)
+        public async Task<ActionResult> DetailsPriceList(CancellationToken cancellationToken, int id)
         {
-            PriceList priceList = _priceListRepository.GetPriceListById(id);
+            PriceList priceList = await _priceListRepository.GetPriceListByIdAsync(cancellationToken, id);
             var detailsPriceListViewModel = new DetailsPriceListViewModel()
             {
                 Id = priceList.Id,
@@ -76,6 +87,10 @@ namespace PriceListEditor2.Controllers
         }
 
         // GET: PriceLists/CreatePriceList
+        /// <summary>
+        /// Возвращает пустую модель прайс-листа.
+        /// </summary>
+        /// <returns>Прайс-лист.</returns>
         public ActionResult CreatePriceList()
         {
             var createPriceListViewModel = new CreatePriceListViewModel();
@@ -83,8 +98,14 @@ namespace PriceListEditor2.Controllers
         }
 
         // POST: PriceLists/CreatePriceList
+        /// <summary>
+        /// Создает новый прайс-лист на основе получаемой модели.
+        /// Перенаправляет выполнение на лист прайс-листов.
+        /// </summary>
+        /// <param name="createPriceListViewModel">Модель прайс-листа</param>
+        /// <returns>Объект перенаправления.</returns>
         [HttpPost]
-        public ActionResult CreatePriceList(CreatePriceListViewModel createPriceListViewModel)
+        public async Task<ActionResult> CreatePriceList(CancellationToken cancellationToken, CreatePriceListViewModel createPriceListViewModel)
         {
             var priceListColumns = new List<PriceListColumn>();
             foreach (PriceListColumnViewModel columns in createPriceListViewModel.Columns)
@@ -103,36 +124,49 @@ namespace PriceListEditor2.Controllers
                 PriceListColumns = priceListColumns,
             };
 
-            _priceListRepository.CreatePriceList(priceList);
-            _priceListColumnRepository.CreatePriceListColumns(priceListColumns);
+            await _priceListRepository.CreatePriceListAsync(cancellationToken, priceList);
+            await _priceListColumnRepository.CreatePriceListColumnsAsync(cancellationToken, priceListColumns);
 
             return RedirectToAction("PriceLists");
         }
 
         // GET: PriceLists/CreatePriceListProduct/{id}
+        /// <summary>
+        /// Формирует модель для создания нового товара в прайс-листе.
+        /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <param name="id">Идентификатор прайс-листа</param>
+        /// <returns>Представление для создания нового товара.</returns>
         [HttpGet]
-        public ActionResult CreatePriceListProduct(int id)
+        public async Task<ActionResult> CreatePriceListProduct(CancellationToken cancellationToken, int id)
         {
-            PriceList priceList = _priceListRepository.GetPriceListById(id);
+            PriceList priceList = await _priceListRepository.GetPriceListByIdAsync(cancellationToken, id);
             var createPriceListProductViewModel = new CreatePriceListProductViewModel() { PriceListId = id };
             foreach (PriceListColumn column in priceList.PriceListColumns)
             {
                 createPriceListProductViewModel.Columns.Add(new PriceListColumnViewModel()
                 {
-                    Name= column.Name,
+                    Name = column.Name,
                     Type = column.Type,
                 });
             }
-            
+
             return View(createPriceListProductViewModel);
         }
 
         // POST: PriceLists/CreatePriceListProduct
+        /// <summary>
+        /// Создает товар прайс-листа на основе получаемой модели.
+        /// Перенаправляет выполнение на прайс-лист.
+        /// </summary>
+        /// <param name="createPriceListProductViewModel">Модель товара</param>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <returns>Объект перенаправления.</returns>
         [HttpPost]
-        public async Task<ActionResult> CreatePriceListProduct(CreatePriceListProductViewModel createPriceListProductViewModel,
-            CancellationToken cancellationToken)
+        public async Task<ActionResult> CreatePriceListProduct(CancellationToken cancellationToken,
+            CreatePriceListProductViewModel createPriceListProductViewModel)
         {
-            var priceListColumns = _priceListColumnRepository.GetPriceListColumnsByPriceListId(Convert.ToInt32(createPriceListProductViewModel.PriceListId));
+            var priceListColumns = await _priceListColumnRepository.GetPriceListColumnsByPriceListIdAsync(cancellationToken, Convert.ToInt32(createPriceListProductViewModel.PriceListId));
 
             var priceListProduct = new PriceListProduct()
             {
@@ -141,7 +175,7 @@ namespace PriceListEditor2.Controllers
                 PriceListId = Convert.ToInt32(createPriceListProductViewModel.PriceListId)
             };
 
-            int priceListProductId = await _priceListProductRepository.CreatePriceListProductAsync(priceListProduct, cancellationToken);
+            int priceListProductId = await _priceListProductRepository.CreatePriceListProductAsync(cancellationToken, priceListProduct);
 
             var priceListCells = new List<PriceListCell>();
             for (int i = 0; i < priceListColumns.Count; i++)
@@ -154,24 +188,35 @@ namespace PriceListEditor2.Controllers
                 });
             }
 
-            _priceListCellRepository.CreatePriceListCells(priceListCells);
+            await _priceListCellRepository.CreatePriceListCellsAsync(cancellationToken, priceListCells);
 
             return RedirectToAction("DetailsPriceList", new { createPriceListProductViewModel.PriceListId });
         }
 
-        //POST: PriceLists/Delete/5
+        //POST: PriceLists/DeletePriceListProduct/{id}
+        /// <summary>
+        /// Удаляет товар из прайс-листа по идентификатору товара.
+        /// </summary>
+        /// <param name="priceListProductId">Идентификатор товара</param>
+        /// <returns>JSON-объект, содержащий результат выполнения удаления.</returns>
         [HttpPost]
-        public JsonResult Delete(int priceListProductId)
+        public async Task<JsonResult> DeletePriceListProduct(CancellationToken cancellationToken, int priceListProductId)
         {
-            _priceListProductRepository.Delete(priceListProductId);
-            
+            await _priceListProductRepository.DeletePriceListProductByIdAsync(cancellationToken, priceListProductId);
+
             return Json(new { success = true });
         }
 
+        /// <summary>
+        /// Получает товары прайс-листа.
+        /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <param name="priceListId">Идентификатр прайс-листа</param>
+        /// <returns>JSON-объект, содержащий товары прайс-листа.</returns>
         [HttpPost]
-        public JsonResult PriceListProductsDataHandler(/*DTParameters param, */int priceListId)
+        public async Task<JsonResult> PriceListProductsDataHandler(CancellationToken cancellationToken, /*DTParameters param, */ int priceListId)
         {
-            PriceList priceList = _priceListRepository.GetPriceListById(priceListId);
+            PriceList priceList = await _priceListRepository.GetPriceListByIdAsync(cancellationToken, priceListId);
 
             List<PriceListProductViewModel> priceListProductsViewModel = priceList.PriceListProducts
                 .Select(plp => new PriceListProductViewModel()

@@ -1,10 +1,8 @@
 ﻿using PriceListEditor2.Domain.Core;
 using PriceListEditor2.Domain.Interfaces;
-using PriceListEditor2.Infrastructure.Data.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,20 +11,36 @@ namespace PriceListEditor2.Infrastructure.Data.Repositories
     ///<inheritdoc cref="IPriceListRepository">
     public class PriceListRepository : BaseRepository, IPriceListRepository, IDisposable
     {
-        public async Task<IEnumerable<PriceList>> GetFilteredListAsync(int page, int pageSize, CancellationToken cancellationToken)
+        /// <summary>
+        /// Получает список прайс-листов.
+        /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <returns>Список прайс-листов.</returns>
+        public async Task<List<PriceList>> GetPriceListsAsync(CancellationToken cancellationToken)
         {
-            return await PagedList<PriceList>.ToPagedListAsync(_dbContext.PriceLists.OrderByDescending(p => p.CreatedAt), page, pageSize, cancellationToken);
+            return await _dbContext.PriceLists.ToListAsync(cancellationToken);
         }
 
-        public PriceList GetPriceListById(int id)
+        /// <summary>
+        /// Получает прайс-лист по идентификатору прайс-листа.
+        /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <param name="id">Идентификатор прайс-листа</param>
+        /// <returns>Прайс-лист</returns>
+        public async Task<PriceList> GetPriceListByIdAsync(CancellationToken cancellationToken, int id)
         {
-            return _dbContext.PriceLists.Find(id);
+            return await _dbContext.PriceLists.FindAsync(cancellationToken, id);
         }
 
-        public void CreatePriceList(PriceList priceList)
+        /// <summary>
+        /// Создает новый прайс-лист.
+        /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <param name="priceList">Прайс-лист</param>
+        public async Task CreatePriceListAsync(CancellationToken cancellationToken, PriceList priceList)
         {
             _dbContext.PriceLists.Add(priceList);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

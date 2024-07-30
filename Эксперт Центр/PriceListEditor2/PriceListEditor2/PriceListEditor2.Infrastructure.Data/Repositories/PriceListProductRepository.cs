@@ -9,18 +9,29 @@ namespace PriceListEditor2.Infrastructure.Data.Repositories
     ///<inheritdoc cref="IPriceListProductRepository">
     public class PriceListProductRepository : BaseRepository, IPriceListProductRepository, IDisposable
     {
-        public async Task<int> CreatePriceListProductAsync(PriceListProduct priceListProduct, CancellationToken cancellationToken)
+        /// <summary>
+        /// Добавляет товар в прайс-лист.
+        /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <param name="priceListProduct">Товар</param>
+        /// <returns>Идентификатор товара, добавленного в прайс-лист.</returns>
+        public async Task<int> CreatePriceListProductAsync(CancellationToken cancellationToken, PriceListProduct priceListProduct)
         {
             PriceListProduct result = _dbContext.PriceListProducts.Add(priceListProduct);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return result.Id;
         }
 
-        public void Delete(int priceListProductId)
+        /// <summary>
+        /// Удаляет товар из прайс-листа по идентификатору товара.
+        /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <param name="priceListProductId">Идентификатор товара прайс-листа</param>
+        public async Task DeletePriceListProductByIdAsync(CancellationToken cancellationToken, int priceListProductId)
         {
-            PriceListProduct priceListProduct = _dbContext.PriceListProducts.Find(priceListProductId);
+            PriceListProduct priceListProduct = await _dbContext.PriceListProducts.FindAsync(cancellationToken, priceListProductId);
             _dbContext.PriceListProducts.Remove(priceListProduct);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

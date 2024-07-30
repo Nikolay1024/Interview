@@ -2,6 +2,9 @@
 
 namespace PriceListEditor2.Domain.Core.Enums
 {
+    /// <summary>
+    /// Тип значений столбца.
+    /// </summary>
     public enum PriceListColumnType
     {
         [Display(Name = "Число")]

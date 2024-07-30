@@ -51,32 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configurations\InitalizeDb.cs" />
+    <Compile Include="Configurations\PriceListEditorDbInitializer.cs" />
     <Compile Include="Configurations\PriceListConfiguration.cs" />
-    <Compile Include="Extensions\PagedList.cs" />
-    <Compile Include="Migrations\202407210022195_Initial.cs" />
-    <Compile Include="Migrations\202407210022195_Initial.Designer.cs">
-      <DependentUpon>202407210022195_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407210141586_AddPriceList.cs" />
-    <Compile Include="Migrations\202407210141586_AddPriceList.Designer.cs">
-      <DependentUpon>202407210141586_AddPriceList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407210217433_AddFieldPriceList.cs" />
-    <Compile Include="Migrations\202407210217433_AddFieldPriceList.Designer.cs">
-      <DependentUpon>202407210217433_AddFieldPriceList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407211307565_DeleteBook.cs" />
-    <Compile Include="Migrations\202407211307565_DeleteBook.Designer.cs">
-      <DependentUpon>202407211307565_DeleteBook.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407231614459_CreateTables.cs" />
-    <Compile Include="Migrations\202407231614459_CreateTables.Designer.cs">
-      <DependentUpon>202407231614459_CreateTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202407231718174_ChangeProductCodeType.cs" />
-    <Compile Include="Migrations\202407231718174_ChangeProductCodeType.Designer.cs">
-      <DependentUpon>202407231718174_ChangeProductCodeType.cs</DependentUpon>
+    <Compile Include="Migrations\202407292059172_Initial.cs" />
+    <Compile Include="Migrations\202407292059172_Initial.Designer.cs">
+      <DependentUpon>202407292059172_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PriceListEditorContext.cs" />
@@ -102,23 +81,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202407210022195_Initial.resx">
-      <DependentUpon>202407210022195_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407210141586_AddPriceList.resx">
-      <DependentUpon>202407210141586_AddPriceList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407210217433_AddFieldPriceList.resx">
-      <DependentUpon>202407210217433_AddFieldPriceList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407211307565_DeleteBook.resx">
-      <DependentUpon>202407211307565_DeleteBook.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407231614459_CreateTables.resx">
-      <DependentUpon>202407231614459_CreateTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407231718174_ChangeProductCodeType.resx">
-      <DependentUpon>202407231718174_ChangeProductCodeType.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202407292059172_Initial.resx">
+      <DependentUpon>202407292059172_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

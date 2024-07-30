@@ -1,10 +1,16 @@
 ﻿using PriceListEditor2.Domain.Core;
+using PriceListEditor2.Infrastructure.Data.Configurations;
 using System.Data.Entity;
 
 namespace PriceListEditor2.Infrastructure.Data
 {
     public class PriceListEditorContext : DbContext
     {
+        public PriceListEditorContext() : base()
+        {
+            //Database.SetInitializer(new PriceListEditorDbInitializer());
+        }
+
         public DbSet<PriceListCell> PriceListCells { get; set; }
         public DbSet<PriceListColumn> PriceListColumns { get; set; }
         public DbSet<PriceListProduct> PriceListProducts { get; set; }

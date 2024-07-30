@@ -3,7 +3,7 @@
 namespace PriceListEditor2.Domain.Core
 {
     /// <summary>
-    /// Ячейка
+    /// Ячейка прайс-листа.
     /// </summary>
     public class PriceListCell
     {

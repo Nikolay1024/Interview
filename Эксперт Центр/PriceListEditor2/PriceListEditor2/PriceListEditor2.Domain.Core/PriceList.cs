@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PriceListEditor2.Domain.Core
 {
     /// <summary>
-    /// Прайс-лист
+    /// Прайс-лист.
     /// </summary>
     public class PriceList
     {
