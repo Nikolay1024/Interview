@@ -10,10 +10,8 @@ using System.Web.Mvc;
 
 namespace PriceListEditor2.Controllers
 {
-    // async/await
-    // комментарии в методах контроллера, вьюмоделях, репозиториях, сущностях
     /// <summary>
-    /// Контроллер прайс-листа
+    /// Контроллер прайс-листа.
     /// </summary>
     [RoutePrefix("PriceLists")]
     public class PriceListsController : Controller
@@ -125,7 +123,6 @@ namespace PriceListEditor2.Controllers
             };
 
             await _priceListRepository.CreatePriceListAsync(cancellationToken, priceList);
-            await _priceListColumnRepository.CreatePriceListColumnsAsync(cancellationToken, priceListColumns);
 
             return RedirectToAction("PriceLists");
         }

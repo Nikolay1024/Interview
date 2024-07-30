@@ -2,13 +2,17 @@
 using PriceListEditor2.Domain.Core.Enums;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
 
-namespace PriceListEditor2.Infrastructure.Data.Configurations
+namespace PriceListEditor2.Infrastructure.Data.Migrations
 {
-    public class PriceListEditorDbInitializer : DropCreateDatabaseAlways<PriceListEditorContext>
+    internal sealed class PriceListEditorConfiguration : DbMigrationsConfiguration<PriceListEditorContext>
     {
+        public PriceListEditorConfiguration()
+        {
+            AutomaticMigrationsEnabled = false;
+        }
+
         protected override void Seed(PriceListEditorContext dbContext)
         {
             List<PriceList> priceLists = new List<PriceList>()
@@ -95,8 +99,6 @@ namespace PriceListEditor2.Infrastructure.Data.Configurations
             };
             foreach (PriceListCell priceListCell in priceListCells)
                 dbContext.PriceListCells.AddOrUpdate(plc => new { plc.Value, plc.PriceListProductId, plc.PriceListColumnId }, priceListCell);
-
-            base.Seed(dbContext);
         }
     }
 }

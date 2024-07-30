@@ -13,17 +13,6 @@ namespace PriceListEditor2.Infrastructure.Data.Repositories
     public class PriceListColumnRepository : BaseRepository, IPriceListColumnRepository, IDisposable
     {
         /// <summary>
-        /// Создает колонки прайс-листа.
-        /// </summary>
-        /// <param name="cancellationToken">Токен отмены операции</param>
-        /// <param name="priceListColumns">Столбцы прайс-листа</param>
-        public async Task CreatePriceListColumnsAsync(CancellationToken cancellationToken, List<PriceListColumn> priceListColumns)
-        {
-            _dbContext.PriceListColumns.AddRange(priceListColumns);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-        /// <summary>
         /// Получает колонки прайс-листа по идентификатору прайс-листа.
         /// </summary>
         /// <param name="cancellationToken">Токен отмены операции</param>

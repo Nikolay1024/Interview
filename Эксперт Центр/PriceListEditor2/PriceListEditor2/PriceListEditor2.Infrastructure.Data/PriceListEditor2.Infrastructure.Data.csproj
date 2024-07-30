@@ -52,12 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configurations\PriceListEditorDbInitializer.cs" />
-    <Compile Include="Configurations\PriceListConfiguration.cs" />
     <Compile Include="Migrations\202407292059172_Initial.cs" />
     <Compile Include="Migrations\202407292059172_Initial.Designer.cs">
       <DependentUpon>202407292059172_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\PriceListEditorConfiguration.cs" />
     <Compile Include="PriceListEditorContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />

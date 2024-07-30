@@ -9,13 +9,6 @@ namespace PriceListEditor2.Domain.Interfaces
     public interface IPriceListColumnRepository : IDisposable
     {
         /// <summary>
-        /// Создает колонки прайс-листа.
-        /// </summary>
-        /// <param name="cancellationToken">Токен отмены операции</param>
-        /// <param name="priceListColumns">Столбцы прайс-листа</param>
-        Task CreatePriceListColumnsAsync(CancellationToken cancellationToken, List<PriceListColumn> priceListColumns);
-
-        /// <summary>
         /// Получает колонки прайс-листа по идентификатору прайс-листа.
         /// </summary>
         /// <param name="cancellationToken">Токен отмены операции</param>
